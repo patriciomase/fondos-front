@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { lastMonth, prevMonth, prevYear, daysInMonth } from './Calendar';
+import { lastMonth, last3Months, prevMonth, prevYear, daysInMonth } from './Calendar';
 
 describe('Calendar functions', () => {
   it('Returns the previous month', () => {
@@ -35,5 +35,17 @@ describe('Calendar functions', () => {
     expect(aMonth).to.have.length(30);
     expect(aMonth[0].name).to.equal('2020-1-8');
     expect(aMonth[29].name).to.equal('2019-12-10');
+  });
+
+  it('Returns an array including all the last 3 months days', () => {
+    const days = last3Months(2020, 3, 8);
+    expect(days).to.have.length(90);
+    expect(days[0].name).to.equal('2020-3-8');
+    expect(days[1].name).to.equal('2020-3-7');
+    expect(days[8].name).to.equal('2020-2-29');
+    expect(days[29].name).to.equal('2020-2-8');
+    expect(days[37].name).to.equal('2020-1-31');
+    expect(days[68].name).to.equal('2019-12-31');
+    expect(days[89].name).to.equal('2019-12-10');
   });
 });

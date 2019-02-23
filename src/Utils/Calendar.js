@@ -14,9 +14,9 @@ function daysInMonth (year, month) {
   return new Date(year, month, 0).getDate();
 }
 
-function lastMonth(year, month, day) {
+function lastXDays(year, month, day, howMuchDays = 30) {
   let monthArray = [];
-  for (let i = 30; i > 0; i--) {
+  for (let i = howMuchDays; i > 0; i--) {
     monthArray.push({
       name: `${year}-${month}-${day}`
     });
@@ -36,9 +36,18 @@ function lastMonth(year, month, day) {
   return monthArray;
 }
 
+function lastMonth(year, month, day) {
+  return lastXDays(...arguments, 30);
+}
+
+function last3Months(year, month, day) {
+  return lastXDays(...arguments, 90);
+}
+
 export {
   daysInMonth,
   lastMonth,
+  last3Months,
   prevMonth,
   prevYear
 };
