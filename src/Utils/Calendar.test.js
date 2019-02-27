@@ -22,30 +22,27 @@ describe('Calendar functions', () => {
   });
 
   it('Returns an array including all the last month days', () => {
-    const aMonth = lastMonth(2020, 3, 8);
-    expect(aMonth).to.have.length(30);
-    expect(aMonth[0].name).to.equal('2020-3-8');
-    expect(aMonth[1].name).to.equal('2020-3-7');
-    expect(aMonth[8].name).to.equal('2020-2-29');
-    expect(aMonth[29].name).to.equal('2020-2-8');
+    const aMonth = lastMonth(2020, 4, 8);
+    expect(aMonth[0]).to.equal('2020-03-09');
+    expect(aMonth[1]).to.equal('2020-03-10');
+    expect(aMonth[8]).to.equal('2020-03-17');
+    expect(aMonth[29]).to.equal('2020-04-07');
   });
 
   it('Returns an array correctly managing the going back to past year', () => {
     const aMonth = lastMonth(2020, 1, 8);
-    expect(aMonth).to.have.length(30);
-    expect(aMonth[0].name).to.equal('2020-1-8');
-    expect(aMonth[29].name).to.equal('2019-12-10');
+    expect(aMonth[0]).to.equal('2019-12-09');
+    expect(aMonth[29]).to.equal('2020-01-07');
   });
 
   it('Returns an array including all the last 3 months days', () => {
     const days = last3Months(2020, 3, 8);
-    expect(days).to.have.length(90);
-    expect(days[0].name).to.equal('2020-3-8');
-    expect(days[1].name).to.equal('2020-3-7');
-    expect(days[8].name).to.equal('2020-2-29');
-    expect(days[29].name).to.equal('2020-2-8');
-    expect(days[37].name).to.equal('2020-1-31');
-    expect(days[68].name).to.equal('2019-12-31');
-    expect(days[89].name).to.equal('2019-12-10');
+    expect(days[0]).to.equal('2019-12-09');
+    expect(days[1]).to.equal('2019-12-10');
+    expect(days[8]).to.equal('2019-12-17');
+    expect(days[29]).to.equal('2020-01-07');
+    expect(days[37]).to.equal('2020-01-15');
+    expect(days[68]).to.equal('2020-02-15');
+    expect(days[89]).to.equal('2020-03-07');
   });
 });

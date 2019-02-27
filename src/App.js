@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import { merge } from './Utils/Array';
+import { lastMonth } from './Utils/Calendar';
 import './App.css';
 
 // const absoluteValue = (p, name) => ({ ...p, [name]: p.value, name: p.dateTime });
@@ -19,21 +21,6 @@ const funds = [
   { name: 'BFRENTP', color: '#00F' },
 ];
 
-const merge = (oldValues, newValues) => {
-  const mergedArray = [];
-  newValues.forEach(newElement => {
-    const index = oldValues.findIndex(old => old.dateTime === newElement.dateTime);
-    if (index > -1) {
-      mergedArray.push({ ...oldValues[index], ...newElement});
-    }
-    else {
-      mergedArray.push(newElement);
-    }
-  });
-  // debugger;
-  return mergedArray;
-};
-
 const SimpleLineChart = ({ data }) => {
   return (
     <LineChart
@@ -51,12 +38,19 @@ const SimpleLineChart = ({ data }) => {
   );
 };
 
+const d = new Date();
+const initialState = lastMonth(
+  d.getFullYear(),
+  d.getMonth() + 1,
+  d.getDate()
+);
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      prices: []
+      prices: initialState.map(day => ({ dateTime: day, name: day }))
     }
   }
 

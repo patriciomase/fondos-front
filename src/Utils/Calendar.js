@@ -10,6 +10,10 @@ function prevMonth(currentMonth) {
   return currentMonth - 1;
 }
 
+function forceTwoDigits(num) {
+  return num.toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false});
+}
+
 function daysInMonth (year, month) {
   return new Date(year, month, 0).getDate();
 }
@@ -17,23 +21,19 @@ function daysInMonth (year, month) {
 function lastXDays(year, month, day, howMuchDays = 30) {
   let monthArray = [];
   for (let i = howMuchDays; i > 0; i--) {
-    monthArray.push({
-      name: `${year}-${month}-${day}`
-    });
-
     day--;
-
     if (day < 1) {
       if (month === 1) {
         year = prevYear(year);
       }
-
+      
       month = prevMonth(month);
       day = daysInMonth(year, month);
     }
+    monthArray.push(`${year}-${forceTwoDigits(month)}-${forceTwoDigits(day)}`);
   }
 
-  return monthArray;
+  return monthArray.reverse();
 }
 
 function lastMonth(year, month, day) {
