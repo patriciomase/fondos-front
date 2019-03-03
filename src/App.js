@@ -6,6 +6,7 @@ import './App.css';
 
 // Components.
 import Chart from './components/Chart/Chart';
+import CurrencySelector from './components/CurrencySelector/CurrencySelector';
 
 const percentageValue = name => (values, elem) => {
   const lastElem = values.length ? values[values.length - 1] : elem;
@@ -15,28 +16,30 @@ const percentageValue = name => (values, elem) => {
   });
 }
 
-const cleanWeekendsAndHolidays = elem => elem.value; 
+const cleanWeekendsAndHolidays = elem => elem.value;
+
+const byCurrency = currencies => elem => currencies.indexOf(elem.currency) > -1;
 
 const funds = [
-  // { name: 'FACCARB', color: '#0A0' },
-  { name: 'FBARFPB', color: '#F00' },
-  { name: 'FBAHORA', color: '#F0F' },
-  { name: 'BFRENTP', color: '#00F' },
-  // { name: 'BFBARGB', color: '#0FF' },
-  { name: 'FBAHOPB', color: '#333' },
-  // { name: 'FBABONB', color: '#999' },
-  // { name: 'FBARFDA', color: '#FF7' },
-  // { name: 'FRFDPLB', color: '#7F7' },
-  // { name: 'FBABLAA', color: '#07F' },
-  // { name: 'FBARMXB', color: '#0F7' },
-  // { name: 'FBARTIB', color: '#7F0' },
-  // { name: 'FBRTIIB', color: '#F07' },
-  // { name: 'BFCALIF', color: '#000' },
-  // { name: 'BFALATB', color: '#7FF' },
-  // { name: 'FBABRAD', color: '#DDD' },
+  { name: 'FACCARA', color: '#0A0', currency: 'ARS', fullName: 'FBA Acciones Argentina A' },
+  { name: 'FBARFPA', color: '#F00', currency: 'ARS', fullName: 'FBA Renta Fija Pesos A' },
+  { name: 'FBAHORA', color: '#F0F', currency: 'ARS', fullName: 'FBA Horizonte' },
+  { name: 'BFRENTP', color: '#00F', currency: 'ARS', fullName: 'FBA Renta pesos' },
+  { name: 'BFBARGA', color: '#0FF', currency: 'ARS', fullName: 'FBA Bonos Argentina A' },
+  { name: 'FBAHOPA', color: '#333', currency: 'ARS', fullName: 'FBA Horizonte Plus A' },
+  { name: 'FBABONA', color: '#999', currency: 'ARS', fullName: 'FBA Bonos Globales A' },
+  { name: 'FBARFDA', color: '#FF7', currency: 'USD', fullName: 'FBA Renta Fija Dolar' },
+  { name: 'FRFDPLA', color: '#7F7', currency: 'USD', fullName: 'FBA Renta Fija Dolar Plus A' },
+  { name: 'FBABLAA', color: '#07F', currency: 'ARS', fullName: 'FBA Bonos Latam A' },
+  { name: 'FBARMXA', color: '#0F7', currency: 'ARS', fullName: 'FBA Renta Mixta A' },
+  { name: 'FBARTIA', color: '#7F0', currency: 'ARS', fullName: 'FBA Retorno Total A' },
+  { name: 'FBRTIIA', color: '#F07', currency: 'USD', fullName: 'FBA Retorno Total II A' },
+  { name: 'BFCALIF', color: '#000', currency: 'ARS', fullName: 'FBA Calificado A' },
+  { name: 'BFALATA', color: '#7FF', currency: 'ARS', fullName: 'FBA Acciones Latinoamericanas A' },
+  { name: 'FBABRAC', color: '#DDD', currency: 'USD', fullName: 'FBA Brasil I C' },
 ];
 
-
+const availableCurrencies = [ 'ARS', 'USD' ];
 
 const d = new Date();
 const initialState = lastMonth(
@@ -50,8 +53,10 @@ function App() {
     initialState.map(day => ({ dateTime: day, name: day }))
   );
 
+  const [ currencies, setCurrencies] = useState([ 'ARS' ]);
+
   useEffect(() => {
-    funds.map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
+    funds.filter(byCurrency(currencies)).map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
     .then(response => {
       setPrices(oldPrices => 
         merge(
@@ -66,7 +71,15 @@ function App() {
     <div className="App">
       <Chart
         data={prices.filter(cleanWeekendsAndHolidays)}
-        funds={funds}
+        funds={funds.filter(byCurrency(currencies))}
+      />
+      <CurrencySelector
+        availableCurrencies={availableCurrencies}
+        handleCurrencies={c => {
+          currencies.find(curr => curr === c) ?
+            setCurrencies(currencies.filter(curr => curr !== c)) :
+            setCurrencies(currencies.concat(c));
+        }}
       />
     </div>
   );
