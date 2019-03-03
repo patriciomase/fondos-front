@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { merge } from './Utils/Array';
 import { lastMonth } from './Utils/Calendar';
 import './App.css';
+
+// Components.
+import Chart from './components/Chart/Chart';
 
 const percentageValue = name => (values, elem) => {
   const lastElem = values.length ? values[values.length - 1] : elem;
@@ -34,22 +36,7 @@ const funds = [
   // { name: 'FBABRAD', color: '#DDD' },
 ];
 
-const SimpleLineChart = ({ data }) => {
-  return (
-    <LineChart
-      width={1000}
-      height={500}
-      data={data}
-      margin={{top: 5, right: 30, left: 20, bottom: 5}}
-    >
-      <XAxis dataKey="name"/>
-      <YAxis/>
-      <CartesianGrid strokeDasharray="3 3"/>
-      <Legend />
-      {funds.map(f => <Line key={f.name} dataKey={`${f.name}:AR`} stroke={f.color} connectNulls={true} />)}
-    </LineChart>
-  );
-};
+
 
 const d = new Date();
 const initialState = lastMonth(
@@ -77,7 +64,10 @@ function App() {
 
   return (
     <div className="App">
-      <SimpleLineChart data={prices.filter(cleanWeekendsAndHolidays)}/>
+      <Chart
+        data={prices.filter(cleanWeekendsAndHolidays)}
+        funds={funds}
+      />
     </div>
   );
 }
