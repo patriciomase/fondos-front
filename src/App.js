@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 import { merge } from './Utils/Array';
 import { lastMonth } from './Utils/Calendar';
 import './App.css';
 
-// const absoluteValue = (p, name) => ({ ...p, [name]: p.value, name: p.dateTime });
-const percentageValue = (name) => (values, elem) => {
+const percentageValue = name => (values, elem) => {
   const lastElem = values.length ? values[values.length - 1] : elem;
   const last = lastElem[name] || 0;
   return values.concat({
@@ -14,11 +13,25 @@ const percentageValue = (name) => (values, elem) => {
   });
 }
 
+const cleanWeekendsAndHolidays = elem => elem.value; 
+
 const funds = [
-  { name: 'FACCARB', color: '#0A0' },
+  // { name: 'FACCARB', color: '#0A0' },
   { name: 'FBARFPB', color: '#F00' },
   { name: 'FBAHORA', color: '#F0F' },
   { name: 'BFRENTP', color: '#00F' },
+  // { name: 'BFBARGB', color: '#0FF' },
+  { name: 'FBAHOPB', color: '#333' },
+  // { name: 'FBABONB', color: '#999' },
+  // { name: 'FBARFDA', color: '#FF7' },
+  // { name: 'FRFDPLB', color: '#7F7' },
+  // { name: 'FBABLAA', color: '#07F' },
+  // { name: 'FBARMXB', color: '#0F7' },
+  // { name: 'FBARTIB', color: '#7F0' },
+  // { name: 'FBRTIIB', color: '#F07' },
+  // { name: 'BFCALIF', color: '#000' },
+  // { name: 'BFALATB', color: '#7FF' },
+  // { name: 'FBABRAD', color: '#DDD' },
 ];
 
 const SimpleLineChart = ({ data }) => {
@@ -45,35 +58,28 @@ const initialState = lastMonth(
   d.getDate()
 );
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+function App() {
+  const [ prices, setPrices ] = useState(
+    initialState.map(day => ({ dateTime: day, name: day }))
+  );
 
-    this.state = {
-      prices: initialState.map(day => ({ dateTime: day, name: day }))
-    }
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     funds.map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
     .then(response => {
-      this.setState(oldState => { return ({
-        // prices: response.data[0].price.map()
-        prices: merge(
-          oldState.prices,
+      setPrices(oldPrices => 
+        merge(
+          oldPrices,
           response.data[0].price.reduce(percentageValue(response.data[0].ticker), [])
-          )
-      })})
+        )
+      )
     }));
-  }
+  }, []);
 
-  render() {
-    return (
-      <div className="App">
-        <SimpleLineChart data={this.state.prices}/>
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <SimpleLineChart data={prices.filter(cleanWeekendsAndHolidays)}/>
+    </div>
+  );
 }
 
 export default App;
