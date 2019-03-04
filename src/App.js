@@ -56,7 +56,7 @@ function App() {
   const [ currencies, setCurrencies] = useState([ 'ARS' ]);
 
   useEffect(() => {
-    funds.filter(byCurrency(currencies)).map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
+    funds.map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
     .then(response => {
       setPrices(oldPrices => 
         merge(
@@ -75,6 +75,7 @@ function App() {
       />
       <CurrencySelector
         availableCurrencies={availableCurrencies}
+        currencies={currencies}
         handleCurrencies={c => {
           currencies.find(curr => curr === c) ?
             setCurrencies(currencies.filter(curr => curr !== c)) :

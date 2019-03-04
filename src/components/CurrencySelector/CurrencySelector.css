@@ -1,0 +1,16 @@
+.currencySelector {
+  border: 2px solid black;
+  padding: 5px;
+}
+
+.currencySelector button {
+  padding: 5px;
+  background: lightgray;
+  border: 1px solid grey;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.currencySelector button.active {
+  background: grey;
+}
