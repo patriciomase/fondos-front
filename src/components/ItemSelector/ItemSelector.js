@@ -6,7 +6,7 @@ const ItemSelector = ({ availableOptions, activeOptions, handleChange }) => {
     <div className="itemSelector">
       {availableOptions.map(c =>
           <button
-            onClick={e => handleChange(c)}
+            onClick={e => handleChange(c.name || c)}
             className={activeOptions.find(curr => curr === c.name || curr === c) ? 'active': ''}
             key={c.name || c}
             title={c.fullName || c.name || c}
