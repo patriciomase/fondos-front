@@ -7,10 +7,11 @@ const CurrencySelector = ({ availableOptions, activeOptions, handleChange }) => 
       {availableOptions.map(c =>
           <button
             onClick={e => handleChange(c)}
-            className={activeOptions.find(curr => curr === c) ? 'active': ''}
-            key={c}
+            className={activeOptions.find(curr => curr === c.name || curr === c) ? 'active': ''}
+            key={c.name || c}
+            title={c.fullName || c.name || c}
           >
-            {c}
+            {c.name || c}
           </button>
         )}
     </div>
