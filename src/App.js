@@ -20,6 +20,8 @@ const cleanWeekendsAndHolidays = elem => elem.value;
 
 const byCurrency = currencies => elem => currencies.indexOf(elem.currency) > -1;
 
+const activeOnes = activeFunds => elem => activeFunds.indexOf(elem.name) > -1;
+
 const funds = [
   { name: 'FACCARA', color: '#0A0', currency: 'ARS', fullName: 'FBA Acciones Argentina A' },
   { name: 'FBARFPA', color: '#F00', currency: 'ARS', fullName: 'FBA Renta Fija Pesos A' },
@@ -54,6 +56,7 @@ function App() {
   );
 
   const [ currencies, setCurrencies] = useState([ 'ARS' ]);
+  const [ activeFunds, setActiveFunds ] = useState([ 'FBABRAC', 'BFALATA', 'BFCALIF' ]);
 
   useEffect(() => {
     funds.map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
@@ -71,17 +74,37 @@ function App() {
     <div className="App">
       <Chart
         data={prices.filter(cleanWeekendsAndHolidays)}
-        funds={funds.filter(byCurrency(currencies))}
+        funds={funds.filter(byCurrency(currencies)).filter(activeOnes(activeFunds))}
       />
-      <CurrencySelector
-        availableCurrencies={availableCurrencies}
-        currencies={currencies}
-        handleCurrencies={c => {
-          currencies.find(curr => curr === c) ?
-            setCurrencies(currencies.filter(curr => curr !== c)) :
-            setCurrencies(currencies.concat(c));
-        }}
-      />
+      <div style={{ width: '100%', position: 'fixed', bottom: '0' }}>
+        <CurrencySelector
+          availableOptions={availableCurrencies}
+          activeOptions={currencies}
+          handleChange={c => {
+            currencies.find(curr => curr === c) ?
+              setCurrencies(currencies.filter(curr => curr !== c)) :
+              setCurrencies(currencies.concat(c));
+          }}
+        />
+        <CurrencySelector
+          availableOptions={funds.filter(f => f.currency === 'ARS').map(f => f.name)}
+          activeOptions={activeFunds}
+          handleChange={c => {
+            activeFunds.find(curr => curr === c) ?
+              setActiveFunds(activeFunds.filter(curr => curr !== c)) :
+              setActiveFunds(activeFunds.concat(c));
+          }}
+        />
+        <CurrencySelector
+          availableOptions={funds.filter(f => f.currency === 'USD').map(f => f.name)}
+          activeOptions={activeFunds}
+          handleChange={c => {
+            activeFunds.find(curr => curr === c) ?
+              setActiveFunds(activeFunds.filter(curr => curr !== c)) :
+              setActiveFunds(activeFunds.concat(c));
+          }}
+        />
+      </div>
     </div>
   );
 }

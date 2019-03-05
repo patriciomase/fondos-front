@@ -13,7 +13,7 @@ const Chart = ({ data, funds }) => {
       <YAxis/>
       <CartesianGrid strokeDasharray="3 3"/>
       <Legend />
-      {funds.map(f => <Line key={f.name} dataKey={`${f.name}:AR`} stroke={f.color} connectNulls={true} />)}
+      {funds.map(f => <Line key={f.name} dataKey={`${f.name}:AR`} stroke={f.color} connectNulls={true} isAnimationActive={false} />)}
     </LineChart>
   );
 };
