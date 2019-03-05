@@ -1,9 +1,9 @@
 import React from 'react';
-import './CurrencySelector.css';
+import './ItemSelector.css';
 
-const CurrencySelector = ({ availableOptions, activeOptions, handleChange }) => {
+const ItemSelector = ({ availableOptions, activeOptions, handleChange }) => {
   return (
-    <div className="currencySelector">
+    <div className="itemSelector">
       {availableOptions.map(c =>
           <button
             onClick={e => handleChange(c)}
@@ -18,4 +18,4 @@ const CurrencySelector = ({ availableOptions, activeOptions, handleChange }) => 
   );
 }
 
-export default CurrencySelector;
+export default ItemSelector;

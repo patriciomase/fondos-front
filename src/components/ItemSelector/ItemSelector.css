@@ -1,9 +1,9 @@
-.currencySelector {
+.itemSelector {
   border: 2px solid black;
   padding: 5px;
 }
 
-.currencySelector button {
+.itemSelector button {
   padding: 5px;
   background: lightgray;
   border: 1px solid grey;
@@ -11,6 +11,6 @@
   margin-right: 5px;
 }
 
-.currencySelector button.active {
+.itemSelector button.active {
   background: grey;
 }

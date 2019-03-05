@@ -6,7 +6,7 @@ import './App.css';
 
 // Components.
 import Chart from './components/Chart/Chart';
-import CurrencySelector from './components/CurrencySelector/CurrencySelector';
+import ItemSelector from './components/ItemSelector/ItemSelector';
 
 const percentageValue = name => (values, elem) => {
   const lastElem = values.length ? values[values.length - 1] : elem;
@@ -71,7 +71,7 @@ function App() {
         data={prices.filter(cleanWeekendsAndHolidays)}
         funds={funds.filter(activeOnes(activeFunds))}
       />
-      <CurrencySelector
+      <ItemSelector
         availableOptions={funds.filter(f => f.currency === 'ARS')}
         activeOptions={activeFunds}
         handleChange={c => {
@@ -80,7 +80,7 @@ function App() {
             setActiveFunds(activeFunds.concat(c));
         }}
       />
-      <CurrencySelector
+      <ItemSelector
         availableOptions={funds.filter(f => f.currency === 'USD')}
         activeOptions={activeFunds}
         handleChange={c => {
