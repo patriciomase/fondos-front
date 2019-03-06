@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import pipe from 'pipe-functions';
 import { merge } from './Utils/Array';
 import { lastMonth } from './Utils/Calendar';
 import './App.css';
@@ -46,7 +47,19 @@ const initialState = lastMonth(
   d.getDate()
 );
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 function App() {
+
+  const [ timeframe, setTimeframe ] = useState('1_MONTH');
+  let prevTimeframe = usePrevious(timeframe);
+  
   const [ prices, setPrices ] = useState(
     initialState.map(day => ({ dateTime: day, name: day }))
   );
@@ -54,7 +67,25 @@ function App() {
   const [ activeFunds, setActiveFunds ] = useState([ 'FBARFPA', 'FBAHORA', 'BFRENTP' ]);
 
   useEffect(() => {
-    funds.map(f => axios.get(`//localhost:8998/?fund=${f.name}`)
+    if (prevTimeframe !== timeframe) {
+      if (timeframe === '1_MONTH') {
+        setPrices(lastMonth(
+          d.getFullYear(),
+          d.getMonth() + 1,
+          d.getDate()
+        )); 
+      }
+  
+      if (timeframe === '6_MONTH') {
+        setPrices(lastMonth(
+          d.getFullYear(),
+          d.getMonth() + 1,
+          d.getDate()
+        ));
+      }
+    }
+
+    funds.map(f => axios.get(`//localhost:8998/?fund=${f.name}&timeframe=${timeframe}`)
     .then(response => {
       setPrices(oldPrices => 
         merge(
@@ -63,7 +94,7 @@ function App() {
         )
       )
     }));
-  }, []);
+  }, [ timeframe ]);
 
   return (
     <div className="App">
@@ -88,6 +119,11 @@ function App() {
             setActiveFunds(activeFunds.filter(curr => curr !== c)) :
             setActiveFunds(activeFunds.concat(c));
         }}
+      />
+      <ItemSelector
+        availableOptions={[ '6_MONTH', '1_MONTH' ]}
+        activeOptions={[ timeframe ]}
+        handleChange={t => setTimeframe(t)}
       />
     </div>
   );
